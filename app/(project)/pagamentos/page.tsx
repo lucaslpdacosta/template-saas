@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import useMercadoPago from '@/app/hooks/useMercadoPago';
 import { useStripe } from '@/app/hooks/useStripe';
-
+  
 export default function Pagamentos() {
     const {
         createPaymentStripeCheckout,

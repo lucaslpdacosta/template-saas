@@ -1,6 +1,7 @@
 import 'server-only';
 import Stripe from "stripe";
 import { db } from "@/app/lib/firebase";
+import resend from '@/app/lib/resend';
 
 export async function handleStripePayment(event: Stripe.CheckoutSessionCompletedEvent) {
     if (event.data.object.payment_status === 'paid') {
@@ -20,5 +21,18 @@ export async function handleStripePayment(event: Stripe.CheckoutSessionCompleted
             stripeSubscriptionId: event.data.object.subscription,
             subscriptionStatus: 'active'
         });
+
+        const { data, error } = await resend.emails.send({
+            from: 'Mail <mail@mail.com>',
+            to: [userEmail],
+            subject: 'Pagamento realizado com sucesso',
+            text: 'Pagamento realizado com sucesso'
+        });
+        
+        if (error) {
+            console.error(error);
+        }
+      
+        console.log(data);
     }
 }
